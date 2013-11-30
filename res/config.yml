@@ -1,0 +1,25 @@
+author:
+  name: Maksim Babenko
+  email: mbabenko21@gmail.com
+
+app:
+  name: "Likedimion-2"
+  version: "0.0.1-dev"
+  mode: "development"
+  services_dir: "@RES_DIR/services"
+  secret: "Consillieri Coding Team Forever"
+
+timers:
+  crim: 1800
+
+doctrine:
+  db_params:
+    driver: "pdo_mysql"
+    user: "root"
+    password: ""
+    dbname: "likedimion"
+  is_dev_mode: true
+  entity_paths: ["@SRC_DIR/likedimion/lib/Likedimion/Database/Entity"]
+  migrations: "@RES_DIR/doctrine/migrations"
+  proxy_dir: "@RES_DIR/doctrine/proxy"
+  proxy_namespace: "Likedimion\\Proxies"

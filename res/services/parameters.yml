@@ -1,0 +1,6 @@
+#
+parameters:
+  account_service_class: "Likedimion\\Database\\Service\\AccountServiceImpl"
+  auth_service_class: "Likedimion\\Tools\\AuthServiceImpl"
+  token_service_class: "Likedimion\\Database\\Service\\TokenServiceImpl"
+

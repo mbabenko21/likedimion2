@@ -1,0 +1,15 @@
+services:
+  account_service:
+    class: "%account_service_class%"
+    calls:
+      - ['setEm', ['@entity_manager']]
+
+  auth_service:
+    class: "%auth_service_class%"
+    calls:
+      - ['setAccountService', ['@account_service']]
+
+  token_service:
+    class: "%token_service_class%"
+    calls:
+      - ['setEm', ['@entity_manager']]
