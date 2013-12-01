@@ -11,10 +11,14 @@ namespace Likedimion\Service;
 
 use Likedimion\Database\Entity\Player;
 
-interface PlayerServiceInterface {
+interface PlayerServiceInterface extends LikedimionRepositoryInterface {
+
     /**
      * @param string $name
+     * @param int $sex
+     * @param int $class
      * @return Player
      */
-    public function findByName($name);
+    public function createPlayer($name, $sex, $class);
+
 } 

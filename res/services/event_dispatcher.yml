@@ -1,0 +1,5 @@
+services:
+  event_dispatcher:
+    class: "Symfony\\Component\\EventDispatcher\\EventDispatcher"
+  event_manager:
+    class: "Symfony\\Component\\EventDispatcher\\EventManager"

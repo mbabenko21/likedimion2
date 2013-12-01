@@ -3,6 +3,11 @@ services:
     class: "%account_service_class%"
     calls:
       - ['setEm', ['@entity_manager']]
+  player_service:
+      class: "%player_service_class%"
+      calls:
+        - ['setEm', ['@entity_manager']]
+        - ['setAuthService', ['@auth_service']]
 
   auth_service:
     class: "%auth_service_class%"

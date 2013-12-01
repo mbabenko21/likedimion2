@@ -16,7 +16,7 @@ doctrine:
   db_params:
     driver: "pdo_mysql"
     user: "root"
-    password: ""
+    password: "qwerty"
     dbname: "likedimion"
   is_dev_mode: true
   entity_paths: ["@SRC_DIR/likedimion/lib/Likedimion/Database/Entity"]

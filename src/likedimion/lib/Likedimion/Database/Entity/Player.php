@@ -12,10 +12,17 @@ namespace Likedimion\Database\Entity;
  * Class Player
  * @package Likedimion\Database\Entity
  *
- * @Entity
+ * @Entity(repositoryClass="Likedimion\Database\Repository\PlayerRepositoryImpl")
  * @Table(name="players")
  */
 class Player {
+    const MALE = 1;
+    const FEMALE = 2;
+
+    const WARRIOR = 1;
+    const MAGE = 2;
+    const RANGER = 3;
+
     /**
      * @var int
      * @Column(type="integer")
@@ -34,6 +41,25 @@ class Player {
      * @ManyToOne(targetEntity="Account", inversedBy="players")
      */
     protected $account;
+    /**
+     * @var int
+     * @Column(name="class", type="integer")
+     */
+    protected $class;
+    /**
+     * @var PlayerStatistic
+     * @OneToOne(
+     *  targetEntity="PlayerStatistic",
+     *  cascade={"persist", "remove", "merge"}
+     * )
+     * @JoinColumn(name="statistic_id", referencedColumnName="id")
+     */
+    protected $statistic;
+    /**
+     * @var int
+     * @Column(name="sex", type="integer")
+     */
+    protected $sex;
 
     /**
      * @var \DateTime
@@ -82,6 +108,7 @@ class Player {
     public function setAccount($account)
     {
         $this->account = $account;
+        $account->addPlayer($this);
     }
 
     /**
@@ -98,5 +125,53 @@ class Player {
     public function setCreatedDate($createdDate)
     {
         $this->createdDate = $createdDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param int $class
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+
+    /**
+     * @return \Likedimion\Database\Entity\PlayerStatistic
+     */
+    public function getStatistic()
+    {
+        return $this->statistic;
+    }
+
+    /**
+     * @param \Likedimion\Database\Entity\PlayerStatistic $statistic
+     */
+    public function setStatistic($statistic)
+    {
+        $this->statistic = $statistic;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
+     * @param int $sex
+     */
+    public function setSex($sex)
+    {
+        $this->sex = $sex;
     }
 } 
