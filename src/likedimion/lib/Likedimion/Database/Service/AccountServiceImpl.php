@@ -12,11 +12,15 @@ namespace Likedimion\Database\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Likedimion\Database\Entity\Account;
+use Likedimion\Exception\AccountServiceException;
+use Likedimion\Service\AccountRepositoryInterface;
 use Likedimion\Service\AccountServiceInterface;
 
 class AccountServiceImpl implements AccountServiceInterface {
     /** @var  EntityManager */
     protected $em;
+    /** @var  string */
+    protected $entityClass;
 
     /**
      * @param \Doctrine\ORM\EntityManager $em
@@ -35,7 +39,7 @@ class AccountServiceImpl implements AccountServiceInterface {
     public function verifyPassword($login, $password)
     {
         try{
-            $account = $this->findByLogin($login);
+            $account = $this->getRepository()->findByLogin($login);
             if(password_verify($password, $account->getPassword())){
                 return true;
             }  else {
@@ -47,48 +51,46 @@ class AccountServiceImpl implements AccountServiceInterface {
     }
 
     /**
-     *
+     * @return AccountRepositoryInterface
+     */
+    public function getRepository()
+    {
+        return $this->em->getRepository($this->entityClass);
+    }
+
+    /**
+     * @param string $entityClass
+     */
+    public function setEntityClass($entityClass)
+    {
+        $this->entityClass = $entityClass;
+    }
+
+    /**
      * @param string $email
-     * @throws \Doctrine\ORM\EntityNotFoundException
-     * @return Account
+     * @param string $password
+     * @param string $confirmPassword
+     * @throws \Likedimion\Exception\AccountServiceException
+     * @internal param string $login
+     * @return bool
      */
-    public function findByEmail($email)
+    public function registration($email, $password, $confirmPassword = "")
     {
-        $criteria = array("email" => $email);
-        return $this->_findAccByCriteria($criteria);
-    }
-
-    /**
-     * @param string $login
-     * @throws \Doctrine\ORM\EntityNotFoundException
-     * @return Account
-     */
-    public function findByLogin($login)
-    {
-        $criteria = array("login" => $login);
-        return $this->_findAccByCriteria($criteria);
-    }
-
-    /**
-     * @param array $criteria
-     * @return null|object
-     * @throws \Doctrine\ORM\EntityNotFoundException
-     */
-    protected function _findAccByCriteria(array $criteria){
-        $repo = $this->em->getRepository('Likedimion\\Database\\Entity\\Account');
-        $document = $repo->findOneBy($criteria);
-        if($document instanceof Account === false){
-            throw new EntityNotFoundException();
+        if($password == $confirmPassword) {
+            $account = new Account();
+            $account->setLogin($email);
+            $account->setPassword($password);
+            $account->setEmail($email);
+            try{
+                $findAccount = $this->getRepository()->findByLogin($email);
+                $findAccountEmail = $this->getRepository()->findByEmail($email);
+                throw new AccountServiceException("login_already_exists");
+            } catch(EntityNotFoundException $e) {
+                $this->getRepository()->save($account);
+                return true;
+            }
+        } else {
+            throw new AccountServiceException("passwords_not_confirm");
         }
-        return $document;
-    }
-
-    /**
-     * @param \Likedimion\Database\Entity\Account $account
-     * @return void
-     */
-    public function save(Account $account)
-    {
-        $this->em->persist($account);
     }
 }

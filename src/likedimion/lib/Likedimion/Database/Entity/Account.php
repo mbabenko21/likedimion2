@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class Account
  * @package Likedimion\Database\Entity
  *
- * @Entity
+ * @Entity(repositoryClass="Likedimion\Database\Repository\AccountRepositoryImpl")
  * @Table(name="accounts")
  */
 class Account {
@@ -27,7 +27,7 @@ class Account {
     protected $id;
     /**
      * @var string
-     * @Column(name="login", type="string")
+     * @Column(name="login", type="string", unique=true)
      */
     protected $login;
     /**
@@ -37,7 +37,7 @@ class Account {
     protected $password;
     /**
      * @var string
-     * @Column(name="email", type="string")
+     * @Column(name="email", type="string", nullable=true, unique=true)
      */
     protected $email;
     /**
@@ -55,18 +55,18 @@ class Account {
     /**
      * @var Token
      * @OneToOne(targetEntity="Token")
-     * @JoinColumn(name="token_id", referencedColumnName="id")
+     * @JoinColumn(name="token_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $authToken;
 
     /**
      * @var \DateTime
-     * @Column(type="date", name="create_date")
+     * @Column(type="datetime", name="create_date")
      */
     protected $createdDate;
 
     public function __construct(){
-        $this->setCreatedDate(new \DateTime());
+        $this->setCreatedDate(new \DateTime("now"));
     }
     /**
      * @return mixed
@@ -164,6 +164,7 @@ class Account {
     public function setAuthToken($authToken)
     {
         $this->authToken = $authToken;
+        $authToken->setAccount($this);
     }
 
     public function unsetAuthToken() {

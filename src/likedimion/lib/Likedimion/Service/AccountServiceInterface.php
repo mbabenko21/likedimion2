@@ -9,7 +9,7 @@
 namespace Likedimion\Service;
 
 
-use Likedimion\Database\Entity\Account;
+use Doctrine\Common\Persistence\ObjectRepository;
 
 interface AccountServiceInterface {
     /**
@@ -21,21 +21,16 @@ interface AccountServiceInterface {
     public function verifyPassword($login, $password);
 
     /**
-     *
+     * @return AccountRepositoryInterface|ObjectRepository
+     */
+    public function getRepository();
+
+    /**
      * @param string $email
-     * @return Account
+     * @param string $password
+     * @param string $confirmPassword
+     * @internal param string $login
+     * @return bool
      */
-    public function findByEmail($email);
-
-    /**
-     * @param string $login
-     * @return Account
-     */
-    public function findByLogin($login);
-
-    /**
-     * @param \Likedimion\Database\Entity\Account $account
-     * @return void
-     */
-    public function save(Account $account);
+    public function registration($email, $password, $confirmPassword = "");
 } 

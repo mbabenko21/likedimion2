@@ -9,50 +9,93 @@
 namespace Likedimion\Tools;
 
 
+use Doctrine\ORM\EntityNotFoundException;
 use Likedimion\Database\Entity\Account;
+use Likedimion\Database\Entity\Token;
+use Likedimion\Game;
+use Likedimion\Service\AccountServiceInterface;
 use Likedimion\Service\AuthServiceInterface;
+use Likedimion\Service\TokenServiceInterface;
 
-class AuthServiceImpl implements AuthServiceInterface {
+class AuthServiceImpl implements AuthServiceInterface
+{
+    /** @var  AccountServiceInterface */
+    protected $accountService;
+    /** @var  TokenServiceInterface */
+    protected $tokenService;
 
     /**
      * @param string $login
      * @param string $password
-     * @return string
+     * @param bool $rememberMe
+     * @return Token
      */
-    public function login($login, $password)
+    public function login($login, $password, $rememberMe = true)
     {
-        // TODO: Implement login() method.
+        try {
+            $account = $this->accountService->getRepository()->findByLogin($login);
+            if ($rememberMe === true) {
+                $config = Game::getInstance()->getConfig();
+                $rememberDays = $config["app"]["remember_days"];
+                $endTime = time() + 3600 * 24 * $rememberDays;
+            } else {
+                $endTime = time() + 3600 * 24;
+            }
+            $endDate = new \DateTime();
+            $endDate->setTimestamp($endTime);
+            if (is_null($account->getAuthToken())) {
+                $token = $this->tokenService->generateToken($account, $endDate);
+                $account->setAuthToken($token);
+            }
+            $this->accountService->getRepository()->save($account);
+            return $account->getAuthToken();
+        } catch (EntityNotFoundException $e) {
+            return false;
+        }
     }
 
     /**
+     * @param string $tokenValue
      * @return bool
      */
-    public function isLogin()
+    public function isLogin($tokenValue)
     {
-        // TODO: Implement isLogin() method.
+        return $this->tokenService->isValid($tokenValue);
     }
 
     /**
-     * @return bool
+     * @param \Likedimion\Service\AccountServiceInterface $accountService
      */
-    public function logout()
+    public function setAccountService($accountService)
     {
-        // TODO: Implement logout() method.
+        $this->accountService = $accountService;
     }
 
     /**
+     * @param \Likedimion\Service\TokenServiceInterface $tokenService
+     */
+    public function setTokenService($tokenService)
+    {
+        $this->tokenService = $tokenService;
+    }
+
+    /**
+     * @param string $tokenValue
      * @return Account
      */
-    public function getAccount()
+    public function getAccount($tokenValue)
     {
-        // TODO: Implement getAccount() method.
+        $token = $this->tokenService->getRepository()->getTokenByValue($tokenValue);
+        return $token->getAccount();
     }
 
     /**
-     * @return string
+     * @param string $tokenValue
+     * @return bool
      */
-    public function getToken()
+    public function logout($tokenValue)
     {
-        // TODO: Implement getToken() method.
+        $token = $this->tokenService->getRepository()->getTokenByValue($tokenValue);
+        $this->tokenService->getRepository()->remove($token);
     }
 }

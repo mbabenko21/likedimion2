@@ -1,6 +1,7 @@
 <?php
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Likedimion\Tools\Helper\LikedimionCommandHelper;
 use Symfony\Component\Console\Helper\DialogHelper;
 
 /**
@@ -14,9 +15,19 @@ require __DIR__."/../index.php";
 
 $cli = new \Symfony\Component\Console\Application('Likedimion CLI', \Likedimion\Game::getInstance()->getVersion());
 $entityManager = \Likedimion\Game::getInstance()->getContainer()->get("entity_manager");
+$config = \Likedimion\Game::getInstance()->getConfig();
+
+$translationsHelper = new \Likedimion\Tools\Helper\TranslationHelper();
+$translationsHelper->setLocale(
+    \Likedimion\Common\StringCommon::replaceKeyWords($config["app"]["locale"])
+);
+$translationsHelper->load();
 
 $helperSet = \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet($entityManager);
 $helperSet->set(new DialogHelper(), 'dialog');
+$helperSet->set($translationsHelper, 'translations');
+$helperSet->set(new LikedimionCommandHelper(), "helpers");
+
 
 $cli->setHelperSet($helperSet);
 
@@ -30,7 +41,8 @@ $cli->addCommands(array(
     new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand(),
 
 
-    new \Likedimion\Tools\Command\InformationCommand()
+    new \Likedimion\Tools\Command\AccountRegistrationCommand(),
+    new \Likedimion\Tools\Command\AuthorisationCommand()
 ));
 \Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($cli);
 $cli->run();

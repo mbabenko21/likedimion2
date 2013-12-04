@@ -22,6 +22,8 @@ class PlayerServiceImpl implements PlayerServiceInterface {
     protected $em;
     /** @var  AuthServiceInterface */
     protected $authService;
+    /** @var  string */
+    protected $entityClass;
 
     /**
      * @param string $name
@@ -66,5 +68,13 @@ class PlayerServiceImpl implements PlayerServiceInterface {
     public function setAuthService($authService)
     {
         $this->authService = $authService;
+    }
+
+    /**
+     * @param string $entityClass
+     */
+    public function setEntityClass($entityClass)
+    {
+        $this->entityClass = $entityClass;
     }
 }

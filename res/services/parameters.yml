@@ -5,3 +5,9 @@ parameters:
   auth_service_class: "Likedimion\\Tools\\AuthServiceImpl"
   token_service_class: "Likedimion\\Database\\Service\\TokenServiceImpl"
 
+
+  ####
+  token_entity: "Likedimion\\Database\\Entity\\Token"
+  account_entity: "Likedimion\\Database\\Entity\\Account"
+  player_entity: "Likedimion\\Database\\Entity\\Player"
+

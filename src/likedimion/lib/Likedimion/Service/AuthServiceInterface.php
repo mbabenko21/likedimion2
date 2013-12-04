@@ -10,32 +10,33 @@ namespace Likedimion\Service;
 
 
 use Likedimion\Database\Entity\Account;
+use Likedimion\Database\Entity\Token;
 
 interface AuthServiceInterface {
     /**
      * @param string $login
      * @param string $password
-     * @return string
+     * @param bool $rememberMe
+     * @return Token
      */
-    public function login($login, $password);
+    public function login($login, $password, $rememberMe = true);
 
     /**
+     * @param string $tokenValue
      * @return bool
      */
-    public function isLogin();
+    public function isLogin($tokenValue);
 
     /**
+     * @param string $tokenValue
      * @return bool
      */
-    public function logout();
+    public function logout($tokenValue);
 
     /**
+     * @param string $tokenValue
      * @return Account
      */
-    public function getAccount();
+    public function getAccount($tokenValue);
 
-    /**
-     * @return string
-     */
-    public function getToken();
 } 

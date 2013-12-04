@@ -9,23 +9,27 @@
 namespace Likedimion\Service;
 
 
+use DateTime;
+use Likedimion\Database\Entity\Account;
 use Likedimion\Database\Entity\Token;
 
 interface TokenServiceInterface {
     /**
+     * @param \Likedimion\Database\Entity\Account $account
+     * @param DateTime $endDate
      * @return Token
      */
-    public function generateToken();
+    public function generateToken(Account $account, DateTime $endDate);
 
     /**
-     * @param string $value
-     * @return Token
-     */
-    public function findToken($value);
-
-    /**
-     * @param Token $token
+     * @param string $tokenValue
      * @return bool
      */
-    public function save(Token $token);
+    public function isValid($tokenValue);
+
+    /**
+     * @return TokenRepositoryInterface
+     */
+    public function getRepository();
+
 } 

@@ -10,6 +10,8 @@ namespace Likedimion;
 
 
 use Likedimion\Common\StringCommon;
+use Likedimion\Database\Entity\Account;
+use Likedimion\Database\Entity\Token;
 use Likedimion\Kernel\DoctrineBootstrap;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,6 +31,8 @@ class Game
     protected $_bootstrap;
     /** @var  array */
     protected $_config;
+    /** @var null|Token */
+    protected $_authToken = null;
 
     public function __construct()
     {
@@ -103,5 +107,21 @@ class Game
     public function setConfig($config)
     {
         $this->_config = $config;
+    }
+
+    /**
+     * @return \Likedimion\Database\Entity\Token|null
+     */
+    public function getAuthToken()
+    {
+        return $this->_authToken;
+    }
+
+    /**
+     * @param \Likedimion\Database\Entity\Token|null $authToken
+     */
+    public function setAuthToken($authToken)
+    {
+        $this->_authToken = $authToken;
     }
 } 

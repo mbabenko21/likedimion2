@@ -8,6 +8,8 @@ app:
   mode: "development"
   services_dir: "@RES_DIR/services"
   secret: "Consillieri Coding Team Forever"
+  locale: "@RES_DIR/translations/ru_RU.yml"
+  remember_days: 30
 
 timers:
   crim: 1800

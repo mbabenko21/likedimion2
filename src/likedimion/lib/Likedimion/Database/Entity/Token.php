@@ -12,7 +12,7 @@ namespace Likedimion\Database\Entity;
  * Class Token
  * @package Likedimion\Database\Entity
  *
- * @Entity
+ * @Entity(repositoryClass="Likedimion\Database\Repository\TokenRepositoryImpl")
  * @Table(name="tokens")
  */
 class Token {
@@ -26,19 +26,25 @@ class Token {
     protected $id;
     /**
      * @var string
-     * @Column(name="value", type="string")
+     * @Column(name="value", type="string", unique=true)
      */
     protected $value;
     /**
      * @var \DateTime
-     * @Column(name="end_date", type="date")
+     * @Column(name="end_date", type="datetime")
      */
     protected $endDate;
     /**
      * @var \DateTime
-     * @Column(name="start_date", type="date")
+     * @Column(name="start_date", type="datetime")
      */
     protected $startDate;
+    /**
+     * @var Account
+     * @OneToOne(targetEntity="Account")
+     * @JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $account;
 
     public function __construct(){
         $this->setStartDate(new \DateTime());
@@ -97,5 +103,21 @@ class Token {
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
+    }
+
+    /**
+     * @return \Likedimion\Database\Entity\Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @param \Likedimion\Database\Entity\Account $account
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
     }
 } 
