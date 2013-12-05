@@ -39,11 +39,14 @@ class AuthServiceImpl implements AuthServiceInterface
                 $rememberDays = $config["app"]["remember_days"];
                 $endTime = time() + 3600 * 24 * $rememberDays;
             } else {
-                $endTime = time() + 3600 * 24;
+                $endTime = time() + 600;
             }
             $endDate = new \DateTime();
             $endDate->setTimestamp($endTime);
             if (is_null($account->getAuthToken())) {
+                $token = $this->tokenService->generateToken($account, $endDate);
+                $account->setAuthToken($token);
+            } elseif(!$this->tokenService->isValid($account->getAuthToken()->getValue())) {
                 $token = $this->tokenService->generateToken($account, $endDate);
                 $account->setAuthToken($token);
             }
