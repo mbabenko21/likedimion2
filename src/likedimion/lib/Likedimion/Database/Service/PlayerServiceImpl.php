@@ -13,8 +13,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Likedimion\Database\Entity\Player;
 use Likedimion\Database\Entity\PlayerStatistic;
+use Likedimion\Game;
 use Likedimion\Service\AuthServiceInterface;
-use Likedimion\Service\PlayerRepository;
+use Likedimion\Service\PlayerRepositoryInterface;
 use Likedimion\Service\PlayerServiceInterface;
 
 class PlayerServiceImpl implements PlayerServiceInterface {
@@ -33,7 +34,7 @@ class PlayerServiceImpl implements PlayerServiceInterface {
      */
     public function createPlayer($name, $sex, $class)
     {
-        $account = $this->authService->getAccount();
+        $account = $this->authService->getAccount(Game::getInstance()->getAuthToken()->getValue());
         $player = new Player();
         $statistic = new PlayerStatistic();
         $player->setAccount($account);
@@ -55,7 +56,7 @@ class PlayerServiceImpl implements PlayerServiceInterface {
     }
 
     /**
-     * @return PlayerRepository
+     * @return PlayerRepositoryInterface
      */
     public function getRepository()
     {

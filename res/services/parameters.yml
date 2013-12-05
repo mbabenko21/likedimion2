@@ -4,6 +4,7 @@ parameters:
   player_service_class: "Likedimion\\Database\\Service\\PlayerServiceImpl"
   auth_service_class: "Likedimion\\Tools\\AuthServiceImpl"
   token_service_class: "Likedimion\\Database\\Service\\TokenServiceImpl"
+  player_registration_service_class: "Likedimion\\Database\\Service\\PlayerRegistrationServiceImpl"
 
 
   ####

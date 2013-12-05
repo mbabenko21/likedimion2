@@ -12,9 +12,10 @@ namespace Likedimion\Database\Repository;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
 use Likedimion\Database\Entity\Player;
-use Likedimion\Service\PlayerRepository;
+use Likedimion\Database\Entity\PlayerStatistic;
+use Likedimion\Service\PlayerRepositoryInterface;
 
-class PlayerRepositoryImpl extends EntityRepository implements PlayerRepository {
+class PlayerRepositoryImpl extends EntityRepository implements PlayerRepositoryInterface {
 
     /**
      * @param string $name
@@ -48,5 +49,16 @@ class PlayerRepositoryImpl extends EntityRepository implements PlayerRepository 
     public function remove(Player $player)
     {
         $this->_em->remove($player);
+    }
+
+    /**
+     * @param PlayerStatistic $playerStatistic
+     * @return PlayerStatistic
+     */
+    public function saveStatistic(PlayerStatistic $playerStatistic)
+    {
+        $this->_em->persist($playerStatistic);
+        $this->_em->flush();
+        return $playerStatistic;
     }
 }

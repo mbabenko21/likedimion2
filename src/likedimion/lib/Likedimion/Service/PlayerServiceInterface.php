@@ -21,4 +21,8 @@ interface PlayerServiceInterface extends LikedimionRepositoryInterface {
      */
     public function createPlayer($name, $sex, $class);
 
+    /**
+     * @return PlayerRepositoryInterface
+     */
+    public function getRepository();
 } 

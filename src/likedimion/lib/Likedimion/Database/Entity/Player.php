@@ -8,14 +8,18 @@
 
 namespace Likedimion\Database\Entity;
 
+use Likedimion\Exception\ValidationException;
+
 /**
  * Class Player
  * @package Likedimion\Database\Entity
  *
  * @Entity(repositoryClass="Likedimion\Database\Repository\PlayerRepositoryImpl")
  * @Table(name="players")
+ * @HasLifecycleCallbacks
  */
-class Player {
+class Player
+{
     const MALE = 1;
     const FEMALE = 2;
 
@@ -48,10 +52,7 @@ class Player {
     protected $class;
     /**
      * @var PlayerStatistic
-     * @OneToOne(
-     *  targetEntity="PlayerStatistic",
-     *  cascade={"persist", "remove", "merge"}
-     * )
+     * @OneToOne(targetEntity="PlayerStatistic", cascade={"persist", "remove"})
      * @JoinColumn(name="statistic_id", referencedColumnName="id")
      */
     protected $statistic;
@@ -66,10 +67,18 @@ class Player {
      * @Column(type="date", name="create_date")
      */
     protected $createdDate;
+    /**
+     * @var int
+     * @Column(type="integer", name="last_action_time", nullable=true)
+     */
+    protected $lastActionTime;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->setCreatedDate(new \DateTime());
+        $this->setStatistic(new PlayerStatistic());
     }
+
     /**
      * @return int
      */
@@ -174,4 +183,45 @@ class Player {
     {
         $this->sex = $sex;
     }
+
+    /**
+     * @PrePersist @PreUpdate
+     */
+    public function preSave()
+    {
+        $this->setLastActionTime(time());
+        if (!in_array($this->getClass(), $this->getClasses())) {
+            throw new ValidationException("player_class_is_not_valid");
+        }
+        if($this->getSex() != self::MALE or $this->getSex() != self::FEMALE){
+            throw new ValidationException("player_sex_is_not_valid");
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastActionTime()
+    {
+        return $this->lastActionTime;
+    }
+
+    /**
+     * @param int $lastActionTime
+     */
+    public function setLastActionTime($lastActionTime)
+    {
+        $this->lastActionTime = $lastActionTime;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getClasses()
+    {
+        return array(
+            self::WARRIOR, self::MAGE, self::RANGER
+        );
+    }
+
 } 

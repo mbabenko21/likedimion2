@@ -14,6 +14,10 @@ use Doctrine\ORM\EntityRepository;
 use Likedimion\Database\Entity\Account;
 use Likedimion\Service\AccountRepositoryInterface;
 
+/**
+ * Class AccountRepositoryImpl
+ * @package Likedimion\Database\Repository
+ */
 class AccountRepositoryImpl extends EntityRepository implements AccountRepositoryInterface  {
 
     /**

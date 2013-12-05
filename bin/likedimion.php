@@ -42,7 +42,8 @@ $cli->addCommands(array(
 
 
     new \Likedimion\Tools\Command\AccountRegistrationCommand(),
-    new \Likedimion\Tools\Command\AuthorisationCommand()
+    new \Likedimion\Tools\Command\AuthorisationCommand(),
+    new \Likedimion\Tools\Command\PlayerCreateCommand()
 ));
 \Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($cli);
 $cli->run();

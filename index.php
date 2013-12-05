@@ -11,6 +11,7 @@ $loader = require ROOT_DIR."/vendor/autoload.php";
 
 $loader->add("Likedimion\\", SRC_DIR."/likedimion/lib");
 $loader->add("Likedimion\\Proxies", RES_DIR."/doctrine/proxy");
+$loader->add("Likedimion\\Controller", SRC_DIR."/ldc/lib");
 $loader->add("Migrations\\", RES_DIR."/doctrine/migrations");
 
 $game = \Likedimion\Game::getInstance();

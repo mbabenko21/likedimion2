@@ -7,8 +7,9 @@
  */
 
 namespace Likedimion\Database\Entity;
-use Doctrine\Common\Annotations as ORM;
+use Doctrine\Common\Annotations;
 use Doctrine\Common\Collections\ArrayCollection;
+use Likedimion\Exception\ValidationException;
 
 /**
  * Class Account
@@ -16,12 +17,13 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @Entity(repositoryClass="Likedimion\Database\Repository\AccountRepositoryImpl")
  * @Table(name="accounts")
+ * @HasLifecycleCallbacks
  */
 class Account {
     /**
      * @var int
      * @Id
-     * @GeneratedValue
+     * @GeneratedValue(strategy="AUTO")
      * @Column(type="integer")
      */
     protected $id;
@@ -58,6 +60,12 @@ class Account {
      * @JoinColumn(name="token_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $authToken;
+    /**
+     * @var Player
+     * @OneToOne(targetEntity="Player")
+     * @JoinColumn(name="current_player_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $currentPlayer;
 
     /**
      * @var \DateTime
@@ -185,6 +193,32 @@ class Account {
     public function setCreatedDate($createdDate)
     {
         $this->createdDate = $createdDate;
+    }
+
+    /**
+     * @return \Likedimion\Database\Entity\Player
+     */
+    public function getCurrentPlayer()
+    {
+        return $this->currentPlayer;
+    }
+
+    /**
+     * @param \Likedimion\Database\Entity\Player $currentPlayer
+     */
+    public function setCurrentPlayer($currentPlayer)
+    {
+        $this->currentPlayer = $currentPlayer;
+    }
+
+    /**
+     * @PrePersist @PreUpdate
+     */
+    public function validateAccount() {
+       $match = "/^[a-zA-Z0-9.!#$%&'*+\/\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/";
+       if(!preg_match($match, $this->login)){
+           throw new ValidationException("login_not_valid");
+       }
     }
 
 } 
