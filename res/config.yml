@@ -11,6 +11,27 @@ app:
   locale: "@RES_DIR/translations/ru_RU.yml"
   remember_days: 30
 
+new_player:
+  #warrior
+  1:
+    str: 10
+    dex: 5
+    int: 2
+    end: 10
+    spr: 1
+  2:
+    str: 1
+    dex: 5
+    int: 10
+    end: 2
+    spr: 10
+  3:
+    str: 2
+    dex: 10
+    int: 6
+    end: 7
+    spr: 3
+
 timers:
   crim: 1800
 

@@ -12,3 +12,6 @@ parameters:
   account_entity: "Likedimion\\Database\\Entity\\Account"
   player_entity: "Likedimion\\Database\\Entity\\Player"
 
+  ###
+  player_calculate_params_serice_class: "Likedimion\\Tools\\Calculating\\PlayerCalculatingService"
+

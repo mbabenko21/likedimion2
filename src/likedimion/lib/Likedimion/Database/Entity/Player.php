@@ -27,6 +27,13 @@ class Player
     const MAGE = 2;
     const RANGER = 3;
 
+    const HUMAN = 1;
+    const ELVEN = 2;
+    const GNOME = 3;
+    const UNDEAD = 4;
+    const DARK_ELVEN = 5;
+    const ORK = 6;
+
     /**
      * @var int
      * @Column(type="integer")
@@ -53,7 +60,7 @@ class Player
     /**
      * @var PlayerStatistic
      * @OneToOne(targetEntity="PlayerStatistic", cascade={"persist", "remove"})
-     * @JoinColumn(name="statistic_id", referencedColumnName="id")
+     * @JoinColumn(name="statistic_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $statistic;
     /**
@@ -72,11 +79,43 @@ class Player
      * @Column(type="integer", name="last_action_time", nullable=true)
      */
     protected $lastActionTime;
+    /**
+     * @var int
+     * @Column(type="integer", name="race")
+     */
+    protected $race;
+    /**
+     * @var Location
+     * @OneToOne(targetEntity="Location")
+     * @JoinColumn(name="location_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $location;
+    /**
+     * @var PlayerCharParams
+     * @OneToOne(targetEntity="PlayerCharParams", cascade={"persist", "remove"})
+     * @JoinColumn(name="char_params_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $charParameters;
+    /**
+     * @var PlayerStats
+     * @OneToOne(targetEntity="PlayerStats", cascade={"persist", "remove"})
+     * @JoinColumn(name="player_stats_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $stats;
+    /**
+     * @var PlayerWarParameters
+     * @OneToOne(targetEntity="PlayerWarParameters", cascade={"persist", "remove"})
+     * @JoinColumn(name="war_parameters_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $war;
 
     public function __construct()
     {
         $this->setCreatedDate(new \DateTime());
         $this->setStatistic(new PlayerStatistic());
+        $this->setCharParameters(new PlayerCharParams());
+        $this->setStats(new PlayerStats());
+        $this->setWar(new PlayerWarParameters());
     }
 
     /**
@@ -117,7 +156,6 @@ class Player
     public function setAccount($account)
     {
         $this->account = $account;
-        $account->addPlayer($this);
     }
 
     /**
@@ -166,6 +204,7 @@ class Player
     public function setStatistic($statistic)
     {
         $this->statistic = $statistic;
+        $statistic->setPlayer($this);
     }
 
     /**
@@ -193,7 +232,7 @@ class Player
         if (!in_array($this->getClass(), $this->getClasses())) {
             throw new ValidationException("player_class_is_not_valid");
         }
-        if($this->getSex() != self::MALE or $this->getSex() != self::FEMALE){
+        if($this->getSex() != self::MALE and $this->getSex() != self::FEMALE){
             throw new ValidationException("player_sex_is_not_valid");
         }
     }
@@ -222,6 +261,90 @@ class Player
         return array(
             self::WARRIOR, self::MAGE, self::RANGER
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getRace()
+    {
+        return $this->race;
+    }
+
+    /**
+     * @param int $race
+     */
+    public function setRace($race)
+    {
+        $this->race = $race;
+    }
+
+    /**
+     * @return \Likedimion\Database\Entity\Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param \Likedimion\Database\Entity\Location $location
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+        $location->addPlayer($this);
+    }
+
+    /**
+     * @param PlayerCharParams $charParameters
+     */
+    public function setCharParameters($charParameters)
+    {
+        $this->charParameters = $charParameters;
+        $charParameters->setPlayer($this);
+    }
+
+    /**
+     * @return \Likedimion\Database\Entity\Stats
+     */
+    public function getStats()
+    {
+        return $this->stats;
+    }
+
+    /**
+     * @param PlayerStats $stats
+     */
+    public function setStats($stats)
+    {
+        $this->stats = $stats;
+        $stats->setPlayer($this);
+    }
+
+    /**
+     * @return \Likedimion\Database\Entity\WarParameters
+     */
+    public function getWar()
+    {
+        return $this->war;
+    }
+
+    /**
+     * @param PlayerWarParameters $war
+     */
+    public function setWar($war)
+    {
+        $this->war = $war;
+        $war->setPlayer($this);
+    }
+
+    /**
+     * @return PlayerCharParams
+     */
+    public function getCharParameters()
+    {
+        return $this->charParameters;
     }
 
 } 

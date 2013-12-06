@@ -19,31 +19,31 @@ class PlayerStatistic {
     /**
      * @var int
      * @Id
-     * @GenerateValue(strategy="AUTO")
+     * @GeneratedValue
      * @Column(type="integer")
      */
     protected $id;
     /**
      * @var Player
-     * @OneToOne(targetEntity="Player")
-     * @JoinColumn(name="player_id", referencedColumnName="id")
+     * @OneToOne(targetEntity="Player", cascade={"persist"})
+     * @JoinColumn(name="player_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $player;
     /**
      * @var int
      * @Column(type="integer", name="pvp")
      */
-    protected $PVP;
+    protected $PVP = 0;
     /**
      * @var int
      * @Column(type="integer", name="pve")
      */
-    protected $PVE;
+    protected $PVE = 0;
     /**
      * @var int
      * @Column(type="integer", name="arena_pvp")
      */
-    protected $ArenaPVP;
+    protected $ArenaPVP = 0;
 
     /**
      * @return int

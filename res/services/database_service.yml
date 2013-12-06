@@ -32,3 +32,4 @@ services:
       - ['setPlayerService', ['@player_service']]
       - ['setAuthService', ['@auth_service']]
       - ['setAccountService', ['@account_service']]
+      - ['setPlayerCalculatingService', ['@player_calculate_params_serice']]

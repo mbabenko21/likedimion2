@@ -58,7 +58,5 @@ class PlayerRepositoryImpl extends EntityRepository implements PlayerRepositoryI
     public function saveStatistic(PlayerStatistic $playerStatistic)
     {
         $this->_em->persist($playerStatistic);
-        $this->_em->flush();
-        return $playerStatistic;
     }
 }

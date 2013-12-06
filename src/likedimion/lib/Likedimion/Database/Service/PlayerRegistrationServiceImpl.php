@@ -16,6 +16,7 @@ use Likedimion\Exception\RegistrationException;
 use Likedimion\Game;
 use Likedimion\Service\AccountServiceInterface;
 use Likedimion\Service\AuthServiceInterface;
+use Likedimion\Service\CalculatingService;
 use Likedimion\Service\PlayerRegistrationServiceInterface;
 use Likedimion\Service\PlayerServiceInterface;
 use Likedimion\Tools\Helper\PlayerDataHelper;
@@ -27,6 +28,8 @@ class PlayerRegistrationServiceImpl implements PlayerRegistrationServiceInterfac
     protected $authService;
     /** @var  AccountServiceInterface */
     protected $accountService;
+    /** @var  CalculatingService */
+    protected $playerCalculatingService;
 
     /**
      * @param \Likedimion\Tools\Helper\PlayerDataHelper $playerData
@@ -43,6 +46,19 @@ class PlayerRegistrationServiceImpl implements PlayerRegistrationServiceInterfac
             $player->setName($playerData->name);
             $player->setSex($playerData->sex);
             $player->setClass($playerData->class);
+            $player->setRace($playerData->race);
+            $stats = $player->getStats();
+
+            $cfg = Game::getInstance()->getConfig();
+            $stats->setStrenge($cfg["new_player"][$player->getClass()]["str"]);
+            $stats->setDexterity($cfg["new_player"][$player->getClass()]["dex"]);
+            $stats->setIntelligence($cfg["new_player"][$player->getClass()]["int"]);
+            $stats->setSpirituality($cfg["new_player"][$player->getClass()]["spr"]);
+            $stats->setEndurance($cfg["new_player"][$player->getClass()]["end"]);
+
+            $player->setStats($stats);
+
+            $this->playerCalculatingService->calculate($player);
 
             $this->playerService->getRepository()->save($player);
 
@@ -77,5 +93,13 @@ class PlayerRegistrationServiceImpl implements PlayerRegistrationServiceInterfac
     public function setAccountService($accountService)
     {
         $this->accountService = $accountService;
+    }
+
+    /**
+     * @param \Likedimion\Service\CalculatingService $playerCalculatingService
+     */
+    public function setPlayerCalculatingService($playerCalculatingService)
+    {
+        $this->playerCalculatingService = $playerCalculatingService;
     }
 }

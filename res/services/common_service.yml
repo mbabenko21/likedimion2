@@ -1,0 +1,3 @@
+services:
+  player_calculate_params_serice:
+    class: "%player_calculate_params_serice_class%"
