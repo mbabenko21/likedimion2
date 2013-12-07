@@ -13,10 +13,15 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Likedimion\Database\Entity\Player;
 use Likedimion\Database\Entity\PlayerStatistic;
+use Likedimion\Events\EventsStore;
+use Likedimion\Events\LvlUpEvent;
+use Likedimion\Events\PlayerEvent;
 use Likedimion\Game;
 use Likedimion\Service\AuthServiceInterface;
+use Likedimion\Service\ExperienceService;
 use Likedimion\Service\PlayerRepositoryInterface;
 use Likedimion\Service\PlayerServiceInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class PlayerServiceImpl implements PlayerServiceInterface {
     /** @var  EntityManager */
@@ -25,26 +30,11 @@ class PlayerServiceImpl implements PlayerServiceInterface {
     protected $authService;
     /** @var  string */
     protected $entityClass;
+    /** @var  EventDispatcher */
+    protected $eventDispatcher;
+    /** @var  ExperienceService */
+    protected $expTableService;
 
-    /**
-     * @param string $name
-     * @param int $sex
-     * @param int $class
-     * @return Player
-     */
-    public function createPlayer($name, $sex, $class)
-    {
-        $account = $this->authService->getAccount(Game::getInstance()->getAuthToken()->getValue());
-        $player = new Player();
-        $statistic = new PlayerStatistic();
-        $player->setAccount($account);
-        $player->setName($name);
-        $player->setStatistic($statistic);
-        $player->setSex($sex);
-        $player->setClass($class);
-
-        $this->getRepository()->save($player);
-    }
 
 
     /**
@@ -77,5 +67,43 @@ class PlayerServiceImpl implements PlayerServiceInterface {
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;
+    }
+
+    /**
+     * @param Player $player
+     * @param int $experience
+     * @return Player
+     */
+    public function addExperience(Player $player, $experience = 1)
+    {
+        $cfg = Game::getInstance()->getConfig();
+        $charParams = $player->getCharParameters();
+        $charParams->setExperience($charParams->getExperience() + $experience * $cfg["app"]["exp_rate"]);
+        if($charParams->getExperience() >= $charParams->getNeedExperience()){
+            $exp = $charParams->getExperience() - $charParams->getNeedExperience();
+            $charParams->addLvl(1);
+            $player->setCharParameters($charParams);
+            $this->addExperience($player, $exp);
+            $this->eventDispatcher->dispatch(EventsStore::LVL_UP, new PlayerEvent($player));
+        }
+
+        $player->setCharParameters($charParams);
+        $this->eventDispatcher->dispatch(EventsStore::ADD_EXP, new PlayerEvent($player));
+    }
+
+    /**
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+     */
+    public function setEventDispatcher($eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @param \Likedimion\Service\ExperienceService $expTableService
+     */
+    public function setExpTableService($expTableService)
+    {
+        $this->expTableService = $expTableService;
     }
 }

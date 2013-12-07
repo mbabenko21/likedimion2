@@ -12,15 +12,12 @@ namespace Likedimion\Service;
 use Likedimion\Database\Entity\Player;
 
 interface PlayerServiceInterface extends LikedimionRepositoryInterface {
-
     /**
-     * @param string $name
-     * @param int $sex
-     * @param int $class
+     * @param Player $player
+     * @param int $experience
      * @return Player
      */
-    public function createPlayer($name, $sex, $class);
-
+    public function addExperience(Player $player, $experience = 1);
     /**
      * @return PlayerRepositoryInterface
      */

@@ -14,4 +14,11 @@ parameters:
 
   ###
   player_calculate_params_serice_class: "Likedimion\\Tools\\Calculating\\PlayerCalculatingService"
+  exp_table_service_class: "Likedimion\\Tools\\ExpTableServiceImpl"
+
+  exp_teble_file: "@RES_DIR/exp_table.yml"
+
+  ###
+  event_dispatcher_class: "Likedimion\\Tools\\LikedimionEventDispatcher"
+  player_listener_class: "Likedimion\\Listener\\PlayerListener"
 

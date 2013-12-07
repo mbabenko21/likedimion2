@@ -1,3 +1,5 @@
 services:
   player_calculate_params_serice:
     class: "%player_calculate_params_serice_class%"
+  exp_table_service:
+    class: "%exp_table_service_class%"

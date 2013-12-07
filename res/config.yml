@@ -9,7 +9,9 @@ app:
   services_dir: "@RES_DIR/services"
   secret: "Consillieri Coding Team Forever"
   locale: "@RES_DIR/translations/ru_RU.yml"
+  exp_table: "@RES_DIR/exp_table.yml"
   remember_days: 30
+  exp_rate: 1
 
 new_player:
   #warrior

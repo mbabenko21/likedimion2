@@ -39,21 +39,10 @@ class PlayerCharParams extends CharParameters {
         $this->player = $player;
     }
 
-    public function addExperience($experience){
-        $currentExp = $this->getExperience();
-        $newExperience = $currentExp + $experience;
-        if($newExperience >= $this->getNeedExperience()){
-            $exp = $newExperience - $this->getNeedExperience();
-            $this->setExperience($exp);
-            $this->addLvl(1);
-        }
-    }
-
     /**
      * @param int $count
      */
     public function addLvl($count){
         $this->setLevel($this->getLevel() + $count);
-        //TODO: Event LvlUp
     }
 } 
