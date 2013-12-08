@@ -13,17 +13,7 @@ use Likedimion\Database\Entity\Player;
 use Likedimion\Tools\Helper\ExpTableLevelDataHelper;
 
 interface ExperienceService {
-    /**
-     * @param Player $player
-     * @return ExpTableLevelDataHelper
-     */
-    public function getNextLvl(Player $player);
 
-    /**
-     * @param Player $player
-     * @return ExpTableLevelDataHelper
-     */
-    public function getCurrentLvl(Player $player);
 
     /**
      * @param Player $player

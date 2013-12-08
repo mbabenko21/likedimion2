@@ -24,10 +24,10 @@ class PlayerCalculatingService implements CalculatingService {
         $warParameters = $object->getWar();
 
         $maxLife = ( $stats->getEndurance() + $stats->getStrenge() ) * 10 + 10 * $charParameters->getLevel();
-        $maxMana = $stats->getIntelligence() * 10 + 10 * $charParameters->getLevel();
+        $maxMana = ($stats->getIntelligence() + $stats->getSpirituality()) * 10 + 10 * $charParameters->getLevel();
 
         $charParameters->setMaxLife($maxLife);
-        $charParameters->setMaxMana($maxMana);
+        $charParameters->setMaxMana(round($maxMana));
 
         if($charParameters->getLife() === null){
             $charParameters->setLife($charParameters->getMaxLife());

@@ -12,6 +12,8 @@ app:
   exp_table: "@RES_DIR/exp_table.yml"
   remember_days: 30
   exp_rate: 1
+  base_delay: 2
+  max_lvl: 99
 
 new_player:
   #warrior

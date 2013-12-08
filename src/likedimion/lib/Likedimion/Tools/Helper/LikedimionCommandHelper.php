@@ -31,18 +31,18 @@ class LikedimionCommandHelper extends InputAwareHelper
         $translations = $command->getHelper("translations");
         $login = $dialog->ask(
             $output,
-            $translations->getLine("login"),
+            $translations->getLine("login").": ",
             false
         );
         $password = $dialog->askHiddenResponse(
             $output,
-            $translations->getLine("password"),
+            $translations->getLine("password").": ",
             "password"
         );
         if ($isRemember) {
             $rememberMe = $dialog->askConfirmation(
                 $output,
-                $translations->getLine("remember_me") . " (y/n)",
+                $translations->getLine("remember_me") . " (y/n): ",
                 false
             );
         } else {

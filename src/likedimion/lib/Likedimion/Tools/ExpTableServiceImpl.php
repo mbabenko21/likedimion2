@@ -19,40 +19,6 @@ use Symfony\Component\Yaml\Yaml;
 class ExpTableServiceImpl implements ExperienceService
 {
 
-    /**
-     * @param Player $player
-     * @return ExpTableLevelDataHelper
-     */
-    public function getNextLvl(Player $player)
-    {
-        $currentLvl = $player->getCharParameters()->getLevel();
-        if (isset($this->expTable[$currentLvl + 1])) {
-            $data = new ExpTableLevelDataHelper();
-            $data->setNeedExp($this->expTable[$currentLvl + 1][0]);
-            $data->setCostBonus($this->expTable[$currentLvl + 1][1]);
-            $data->setLifeBonus($this->expTable[$currentLvl + 1][2]);
-            $data->setManaBonus($this->expTable[$currentLvl + 1][3]);
-            return $data;
-        } else {
-            return $this->getCurrentLvl($player);
-        }
-    }
-
-    /**
-     * @param Player $player
-     * @return ExpTableLevelDataHelper
-     */
-    public function getCurrentLvl(Player $player)
-    {
-        $currentLvl = $player->getCharParameters()->getLevel();
-        $data = new ExpTableLevelDataHelper();
-        $data->setNeedExp($this->expTable[$currentLvl][0]);
-        $data->setCostBonus($this->expTable[$currentLvl][1]);
-        $data->setLifeBonus($this->expTable[$currentLvl][2]);
-        $data->setManaBonus($this->expTable[$currentLvl][3]);
-        return $data;
-    }
-
     public function getNeedExpForNextLevel(Player $player)
     {
         $cl = $player->getCharParameters()->getLevel();
@@ -71,9 +37,9 @@ class ExpTableServiceImpl implements ExperienceService
             //580 + (5 × CL)
             //155 + MXP (CL) х (1344 - ((69-CL) * (3 + (69-CL) * 4)))
             $needExp = 155 + 1878 + (5*$cl)*(1990-((89-$cl)*(3+(89-$cl)*5)));
-        } elseif($cl >= 80) {
+        } elseif($cl >= 80 and $cl < 100) {
             //155 + 3517 + (5*83)*(3820-((99-83)*(3+(99-83)*5)))
-            $needExp = 155 + 3517 + (5 * $cl)*(3829-((99-$cl)*(3+(99-$cl)*5)));
+            $needExp = 155 + 3517 + (5 * $cl)*(3829-((100-$cl)*(3+(100-$cl)*5)));
         }
         return $needExp;
     }

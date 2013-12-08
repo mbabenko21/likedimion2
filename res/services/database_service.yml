@@ -11,7 +11,7 @@ services:
         - ['setEm', ['@entity_manager']]
         - ['setAuthService', ['@auth_service']]
         - ['setEntityClass', ['%player_entity%']]
-        - ["setEventDispatcher", ["@event_dispatcher"]
+        - ["setEventDispatcher", ["@event_dispatcher"]]
   ## Серверная авторизация
   auth_service:
     class: "%auth_service_class%"

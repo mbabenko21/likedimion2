@@ -23,7 +23,8 @@ use Likedimion\Service\PlayerRepositoryInterface;
 use Likedimion\Service\PlayerServiceInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class PlayerServiceImpl implements PlayerServiceInterface {
+class PlayerServiceImpl implements PlayerServiceInterface
+{
     /** @var  EntityManager */
     protected $em;
     /** @var  AuthServiceInterface */
@@ -34,7 +35,6 @@ class PlayerServiceImpl implements PlayerServiceInterface {
     protected $eventDispatcher;
     /** @var  ExperienceService */
     protected $expTableService;
-
 
 
     /**
@@ -78,17 +78,21 @@ class PlayerServiceImpl implements PlayerServiceInterface {
     {
         $cfg = Game::getInstance()->getConfig();
         $charParams = $player->getCharParameters();
-        $charParams->setExperience($charParams->getExperience() + $experience * $cfg["app"]["exp_rate"]);
-        if($charParams->getExperience() >= $charParams->getNeedExperience()){
-            $exp = $charParams->getExperience() - $charParams->getNeedExperience();
-            $charParams->addLvl(1);
-            $player->setCharParameters($charParams);
-            $this->addExperience($player, $exp);
-            $this->eventDispatcher->dispatch(EventsStore::LVL_UP, new PlayerEvent($player));
-        }
+        if ($charParams->getLevel() <= $cfg["app"]["max_lvl"]) {
+            $charParams->setExperience($charParams->getExperience() + $experience * $cfg["app"]["exp_rate"]);
+            if ($charParams->getExperience() >= $charParams->getNeedExperience()) {
+                $exp = $charParams->getExperience() - $charParams->getNeedExperience();
+                $charParams->setExperience(0);
+                $charParams->addLvl(1);
+                $player->setCharParameters($charParams);
+                $this->addExperience($player, $exp);
+                $this->eventDispatcher->dispatch(EventsStore::LVL_UP, new PlayerEvent($player));
+            }
 
-        $player->setCharParameters($charParams);
-        $this->eventDispatcher->dispatch(EventsStore::ADD_EXP, new PlayerEvent($player));
+            $player->setCharParameters($charParams);
+            $this->eventDispatcher->dispatch(EventsStore::ADD_EXP, new PlayerEvent($player));
+            //$this->getRepository()->save($player);
+        }
     }
 
     /**
